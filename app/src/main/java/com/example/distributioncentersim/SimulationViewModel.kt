@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.distributioncentersim.generators.generateRandomTruckForLoading
 import com.example.distributioncentersim.generators.generateRandomTruckForUnloading
+import com.example.distributioncentersim.models.ProductCategory
+import com.example.distributioncentersim.models.Truck
 import com.example.distributioncentersim.ports.LoadingPort
 import com.example.distributioncentersim.ports.UnloadingPort
 import com.example.distributioncentersim.warehouse.Warehouse
@@ -15,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import com.example.distributioncentersim.models.Truck
 
 /**
  * Управляет логикой и состоянием симуляции распределительного центра.
@@ -39,7 +40,9 @@ class SimulationViewModel : ViewModel() {
         if (simulationJob?.isActive == true) return
 
         // Сброс состояния перед новым запуском
-        _uiState.value = SimulationState(isRunning = true, logMessages = listOf("▶️ Симуляция запущена!"))
+        _uiState.value = SimulationState(isRunning = true)
+        addLogMessage("▶️ Симуляция запущена!")
+
 
         simulationJob = viewModelScope.launch {
             val warehouse = Warehouse { stock ->
